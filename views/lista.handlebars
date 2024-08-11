@@ -5,9 +5,9 @@
     {{#each pacotes}}
       <li class="card">
         <a href="/pacotes/{{id}}">
-          <p><strong>Remetente:</strong> {{remetente}}</p>
-          <p><strong>Destinatário:</strong> {{destinatario}}</p>
-          <p><strong>Endereço de entrega:</strong> {{endereco}}</p>
+          <p><strong>Remetente:</strong> {{pacotes.remetente}}</p>
+          <p><strong>Destinatário:</strong> {{pacotes.destinatario}}</p>
+          <p><strong>Endereço de entrega:</strong> {{pacotes.endereco}}</p>
         </a>
       </li>
     {{/each}}

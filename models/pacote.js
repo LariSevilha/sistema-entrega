@@ -11,6 +11,10 @@ const Pacote = connection.define('Pacote', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  endereco: {
+    type: DataTypes.STRING,   
+    allowNull: true   
+  },
   userId: {  
     type: DataTypes.INTEGER,
     allowNull: false,

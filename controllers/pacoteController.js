@@ -1,48 +1,53 @@
-// controllers/pacoteController.js
-const { Pacote } = require('../models');
+const { Pacote } = require('../models/pacote');
 
-exports.list = async (req, res) => {
+class PacoteController {
+  static async list(req, res) {
     try {
-        const userId = req.user.id;
-        const pacotes = await Pacote.findAll({ where: { userId } });
-        res.render('lista', { pacotes });
+      const userId = req.session.userId;
+      const pacotes = await Pacote.findAll({ where: { userId }, raw: true });
+      res.render('lista', { pacotes });
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Erro ao buscar pacotes');
+      console.error(error);
+      res.status(500).send('Erro ao buscar pacotes');
     }
-};
+  }
 
-
-// Exibe o formulário de cadastro
-exports.createForm = (req, res) => {
-    res.render('cadastro');
-};
-
-// Cria um novo pacote
-exports.create = async (req, res) => {
+  static async createForm(req, res) {
     try {
-        const { remetente, destinatario, endereco } = req.body;
-        const userId = req.user.id;  
-        await Pacote.create({ remetente, destinatario, endereco, userId });
-        res.redirect('/pacotes');
+      res.render('cadastro');
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Erro ao criar pacote');
+      console.error(error);
+      res.status(500).send('Erro ao carregar o formulário de cadastro');
     }
-};
+  }
 
-exports.details = async (req, res) => {
+  static async create(req, res) {
     try {
-        const pacote = await Pacote.findByPk(req.params.id);
-        if (pacote) {
-            res.render('detalhes', { pacote });
-        } else {
-            res.status(404).send('Pacote não encontrado');
-        }
+      const { remetente, destinatario, endereco } = req.body;
+      const userId = req.session.userId;
+      await Pacote.create({ remetente, destinatario, endereco, userId });
+      res.redirect('/pacotes');
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Erro ao buscar detalhes do pacote');
+      console.error(error);
+      res.status(500).send('Erro ao criar pacote');
     }
-};
+  }
 
- 
+  static async details(req, res) {
+    try {
+      const id = parseInt(req.params.id);
+      const userId = req.session.userId;
+      const pacote = await Pacote.findOne({ where: { id, userId }, raw: true });
+      if (pacote) {
+        res.render('detalhes', { pacote });
+      } else {
+        res.status(404).send('Pacote não encontrado');
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Erro ao buscar detalhes do pacote');
+    }
+  }
+}
+
+module.exports = PacoteController;

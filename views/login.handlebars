@@ -1,12 +1,14 @@
 <h1>Login</h1>
-<form action="/login" method="POST">
-  <label for="username">Username:</label><br />
-  <input type="text" id="username" name="username" required /><br />
-  <label for="password">Password:</label><br />
-  <input type="password" id="password" name="password" required /><br /><br />
-  <input type="submit" value="Login" />
-  {{#if error}}
-    <p style="color: red;">{{error}}</p>
-  {{/if}}
-</form>
-<a href="/register">Registrar</a>
+<div class="card-form">
+  <form action="/login" method="POST">
+    <label for="username">Username:</label><br />
+    <input type="text" id="username" name="username" required /><br />
+    <label for="password">Senha:</label><br />
+    <input type="password" id="password" name="password" required /><br /><br />
+    <input type="submit" value="Login" />
+    {{#if error}}
+      <p class="error-message">{{error}}</p>
+    {{/if}}
+  </form>
+  <a href="/register" class="form-link">Registrar</a>
+</div>

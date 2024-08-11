@@ -1,9 +1,11 @@
 <h1>Registrar</h1>
-<form action="/register" method="POST">
-  <label for="username">Username:</label><br />
-  <input type="text" id="username" name="username" required /><br />
-  <label for="password">Password:</label><br />
-  <input type="password" id="password" name="password" required /><br /><br />
-  <input type="submit" value="Registrar" />
-</form>
-<a href="/login">Login</a>
+<div class="card-form">
+  <form action="/register" method="POST">
+    <label for="username">Username:</label><br />
+    <input type="text" id="username" name="username" required /><br />
+    <label for="password">Senha:</label><br />
+    <input type="password" id="password" name="password" required /><br /><br />
+    <input type="submit" value="Registrar" />
+  </form>
+  <a href="/login" class="form-link">Login</a>
+</div>

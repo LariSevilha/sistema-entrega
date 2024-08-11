@@ -18,7 +18,6 @@ app.use(express.static('public'));
 app.engine('handlebars', exphbs.engine());
 app.set('view engine', 'handlebars');
 
-// Configuração do express-session
 app.use(session({
   name: 'session',
   secret: process.env.SESSION_SECRET || 'default-secret',
@@ -44,8 +43,7 @@ const isAuthenticated = (req, res, next) => {
     res.redirect('/login');
   }
 };
-
-// Middleware para configurar sessão no local
+ 
 app.use((req, res, next) => {
   if (req.session.userId) {
     res.locals.session = req.session;
@@ -84,7 +82,7 @@ app.post('/login', async (req, res) => {
     req.session.userId = user.id;
     res.redirect('/pacotes');
   } else {
-    res.render('login', { error: 'Invalid credentials' });
+    res.render('login', { error: 'Username ou senha inválidos' });
   }
 });
 app.post('/logout', (req, res) => {

@@ -3,15 +3,16 @@
 
     <ul>
         {{#each pacotes}}
-            <li class="card">
-                <!-- Removed the link around the pacote details, as it's not needed for deletion -->
+            <li class="card"> 
                 <p><strong>Remetente:</strong> {{remetente}}</p>
                 <p><strong>Destinatário:</strong> {{destinatario}}</p>
                 <p><strong>Endereço de entrega:</strong> {{endereco}}</p>
-                
-                <!-- Corrected form to use POST method -->
+                 
                 <form action="/pacotes/delete/{{id}}" method="POST">
-                    <input type="submit" value="excluir" />
+                  <input type="submit" value="excluir" />
+                </form>
+                <form action="/pedido/atualizar/{{id}}" method="post">
+                  <button type="submit" class="btn-edit">Editar</button>
                 </form>
             </li>
         {{/each}}

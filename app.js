@@ -144,7 +144,19 @@ app.post('/pacotes/delete/:id', async (req, res) => {
   await Pacote.destroy({ where: { id } });
   res.redirect('/pacotes');
 });
+app.get('/pacotes/edit/:id', isAuthenticated, async (req, res) => {
+  const pacote = await Pacote.findOne({ where: { id: req.params.id, userId: req.session.userId } });
+  res.render('editar', { pacote });
+});
 
+app.post('/pedido/atualizar/:id', isAuthenticated, async (req, res) => {
+  const { remetente, destinatario, endereco } = req.body;
+  await Pacote.update(
+    { remetente, destinatario, endereco },
+    { where: { id: req.params.id, userId: req.session.userId } }
+  );
+  res.redirect('/pacotes');
+});
 conn
   .sync()
   .then(() => {

@@ -1,0 +1,20 @@
+<form action="/pedido/atualizar/{{pacote.id}}" method="post">
+    <div class="container">
+        <div class="mb-3">
+            <label id="titulo" class="form-label">ID: {{pacote.id}}</label>
+            <br>
+            <label for="remetente" class="form-label">Remetente:</label>
+            <input type="text" class="form-control" id="remetente" name="remetente" value="{{pacote.remetente}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="destinatario" class="form-label">Destinatário:</label>
+            <input type="text" class="form-control" id="destinatario" name="destinatario" value="{{pacote.destinatario}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="endereco" class="form-label">Endereço de Entrega:</label>
+            <input type="text" class="form-control" id="endereco" name="endereco" value="{{pacote.endereco}}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Atualizar</button>
+    </div>
+</form>
+<a href="/pacotes/{{pacote.id}}" class="btn btn-secondary">Cancelar</a>

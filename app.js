@@ -5,15 +5,18 @@ const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 const flash = require('express-flash');
 const bcrypt = require('bcryptjs');
+const methodOverride = require('method-override');  
 const { User, Pacote } = require('./models');
 const conn = require('./database/connection');
 
 const app = express();
 const port = process.env.SERVER_PORT || 3000;
 
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
+app.use(methodOverride('_method')); // Configura o method-override para suportar métodos PUT e DELETE
 
 app.engine('handlebars', exphbs.engine());
 app.set('view engine', 'handlebars');
@@ -24,7 +27,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: new FileStore({
-    logFn: () => { },
+    logFn: () => {},
     path: require('path').join(__dirname, 'sessions')
   }),
   cookie: {
@@ -43,7 +46,7 @@ const isAuthenticated = (req, res, next) => {
     res.redirect('/login');
   }
 };
- 
+
 app.use((req, res, next) => {
   if (req.session.userId) {
     res.locals.session = req.session;
@@ -85,25 +88,40 @@ app.post('/login', async (req, res) => {
     res.render('login', { error: 'Username ou senha inválidos' });
   }
 });
+
 app.post('/logout', (req, res) => {
-  
   req.session.destroy((err) => {
     if (err) {
-      return res.redirect('/pacotes'); 
+      return res.redirect('/pacotes');
     }
 
-    res.clearCookie('connect.sid'); 
-    res.redirect('/login'); 
+    res.clearCookie('connect.sid');
+    res.redirect('/login');
   });
 });
+
 app.get('/pacotes', isAuthenticated, async (req, res) => {
-  const pacotes = await Pacote.findAll({ where: { userId: req.session.userId } });
-  res.render('lista', { pacotes });
+  try {
+    const pacotes = await Pacote.findAll({ where: { userId: req.session.userId } });
+    res.render('lista', { pacotes });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Erro ao buscar pacotes');
+  }
 });
 
 app.get('/pacotes/:id', isAuthenticated, async (req, res) => {
-  const pacote = await Pacote.findOne({ where: { id: req.params.id, userId: req.session.userId } });
-  res.render('detalhes', { pacote });
+  try {
+    const pacote = await Pacote.findOne({ where: { id: req.params.id, userId: req.session.userId } });
+    if (pacote) {
+      res.render('detalhes', { pacote });
+    } else {
+      res.status(404).send('Pacote não encontrado');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Erro ao buscar detalhes do pacote');
+  }
 });
 
 app.get('/cadastro', isAuthenticated, (req, res) => {
@@ -111,14 +129,19 @@ app.get('/cadastro', isAuthenticated, (req, res) => {
 });
 
 app.post('/cadastro', isAuthenticated, async (req, res) => {
-  const { remetente, destinatario, endereco } = req.body;
-  await Pacote.create({ remetente, destinatario, endereco, userId: req.session.userId });
-  res.redirect('/pacotes');
+  try {
+    const { remetente, destinatario, endereco } = req.body;
+    await Pacote.create({ remetente, destinatario, endereco, userId: req.session.userId });
+    res.redirect('/pacotes');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Erro ao criar pacote');
+  }
 });
-
-app.post('/pacotes/delete/:id', isAuthenticated, async (req, res) => {
-  const id = req.params.id;
-  await Pacote.destroy({ where: { id, userId: req.session.userId } });
+ 
+app.post('/pacotes/delete/:id', async (req, res) => {
+  const { id } = req.params; 
+  await Pacote.destroy({ where: { id } });
   res.redirect('/pacotes');
 });
 

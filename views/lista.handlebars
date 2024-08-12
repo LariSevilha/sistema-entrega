@@ -1,20 +1,25 @@
 <div class="container">
-  <h1>Lista de Pacotes</h1>
+    <h1>Lista de Pacotes</h1>
 
-  <ul>
-    {{#each pacotes}}
-      <li class="card">
-        <a href="/pacotes/{{id}}">
-          <p><strong>Remetente:</strong> {{pacotes.remetente}}</p>
-          <p><strong>Destinatário:</strong> {{pacotes.destinatario}}</p>
-          <p><strong>Endereço de entrega:</strong> {{pacotes.endereco}}</p>
-        </a>
-      </li>
-    {{/each}}
-  </ul>
-  <div class="s">
-    <form action="/logout" method="POST">
-      <input type="submit" value="Sair" class="btn-sair" />
-    </form>
-  </div>
+    <ul>
+        {{#each pacotes}}
+            <li class="card">
+                <!-- Removed the link around the pacote details, as it's not needed for deletion -->
+                <p><strong>Remetente:</strong> {{remetente}}</p>
+                <p><strong>Destinatário:</strong> {{destinatario}}</p>
+                <p><strong>Endereço de entrega:</strong> {{endereco}}</p>
+                
+                <!-- Corrected form to use POST method -->
+                <form action="/pacotes/delete/{{id}}" method="POST">
+                    <input type="submit" value="excluir" />
+                </form>
+            </li>
+        {{/each}}
+    </ul>
+
+    <div class="s">
+        <form action="/logout" method="POST">
+            <input type="submit" value="Sair" class="btn-sair" />
+        </form>
+    </div>
 </div>
